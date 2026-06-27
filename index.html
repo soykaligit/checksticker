@@ -54,7 +54,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* INTEGRACIÓN DEL LOGO */
+        /* INTEGRACIÓN DEL LOGO ORIGINAL */
         .logo-container {
             margin-bottom: 35px;
             width: 100%;
@@ -69,6 +69,7 @@
             height: auto;
             display: block;
             filter: contrast(1.05) brightness(1.02);
+            border-radius: 15px; /* Por si la imagen es cuadrada, le da un toque suave */
         }
 
         /* FORMULARIOS Y BOTONES GENERALES */
@@ -110,7 +111,6 @@
             background-color: #ffffff;
         }
 
-        /* Bloqueo estético en gris */
         .input-field:disabled {
             background-color: #f1f5f9;
             color: #64748b;
@@ -228,7 +228,7 @@
             border: 1px solid #f1f5f9;
         }
 
-        /* PANEL ADMIN */
+        /* PANEL ADMIN MEJORADO CON SECCIÓN DE INGRESOS */
         .admin-only-panel {
             display: none; 
             width: 100%;
@@ -504,8 +504,9 @@
 
     <!-- PANTALLA 1: BIENVENIDA -->
     <div id="welcome-screen" class="screen active">
+        <!-- 🛡️ LOGOTIPO REAL RECUPERADO (Ruta asegurada para GitHub Pages) -->
         <div class="logo-container">
-            <img src="logo mejorado.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='logo mejorado.jpeg.jpeg';">
+            <img src="Logotipo%20mejorado.jpeg.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='Logotipo mejorado.jpeg';">
         </div>
         <div class="button-group">
             <button class="btn-primary" id="go-to-register">REGISTRARSE</button>
@@ -521,7 +522,7 @@
     <!-- PANTALLA 2: REGISTRO -->
     <div id="register-screen" class="screen">
         <div class="logo-container">
-            <img src="logo mejorado.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='logo mejorado.jpeg.jpeg';">
+            <img src="Logotipo%20mejorado.jpeg.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='Logotipo mejorado.jpeg';">
         </div>
         <h2>Crea tu Cuenta</h2>
         <p class="subtitle">Únete para escanear y completar tu álbum</p>
@@ -537,7 +538,7 @@
     <!-- PANTALLA 3: INICIO DE SESIÓN -->
     <div id="login-screen" class="screen">
         <div class="logo-container">
-            <img src="logo mejorado.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='logo mejorado.jpeg.jpeg';">
+            <img src="Logotipo%20mejorado.jpeg.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='Logotipo mejorado.jpeg';">
         </div>
         <h2>¡Hola de nuevo!</h2>
         <p class="subtitle">Ingresa tus datos para acceder a tus cromos</p>
@@ -584,14 +585,13 @@
         </div>
 
         <div class="accordion-container">
-            <!-- Sección 1: Datos Personales -->
             <div class="accordion-item open">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <span>👤 Datos Personales</span><span class="accordion-icon">▼</span>
                 </div>
                 <div class="accordion-content">
                     <div class="accordion-body">
-                        <input type="text" id="profile-fullname" class="input-field" placeholder="jennifer">
+                        <input type="text" id="profile-fullname" class="input-field" placeholder="Nombre completo">
                         <input type="tel" id="profile-phone" class="input-field" placeholder="Teléfono de contacto">
                         
                         <div class="action-button-row">
@@ -602,7 +602,6 @@
                 </div>
             </div>
 
-            <!-- Sección 2: Dirección de Envío -->
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <span>📍 Dirección de Envío</span><span class="accordion-icon">▼</span>
@@ -621,7 +620,6 @@
                 </div>
             </div>
 
-            <!-- Sección 3: Datos de Facturación -->
             <div class="accordion-item">
                 <div class="accordion-header" onclick="goToBillingScreen()">
                     <span>💳 Datos de Facturación</span><span class="accordion-icon" style="transform: rotate(-90deg);">▼</span>
@@ -705,9 +703,9 @@
                 const elemento = document.getElementById(id);
                 if (valorGuardado) {
                     elemento.value = valorGuardado;
-                    elemento.disabled = true; // Bloqueado en gris si tiene datos
+                    elemento.disabled = true;
                 } else {
-                    elemento.disabled = false; // Libre para escribir si está vacío
+                    elemento.disabled = false;
                 }
             });
 
@@ -725,12 +723,13 @@
 
         function actualizarCajaIngresosAdmin() {
             const ingresosTotales = localStorage.getItem('checksticker_ingresos_acumulados') || "0.00";
-            document.getElementById('admin-revenue-text').innerText = parseFloat(ingresosTotales).toFixed(2);
+            const campoTexto = document.getElementById('admin-revenue-text');
+            if (campoTexto) campoTexto.innerText = parseFloat(ingresosTotales).toFixed(2);
         }
 
         function habilitarCamposSeccion(idsCampos) {
             idsCampos.forEach(id => {
-                document.getElementById(id).disabled = false; // Quita el gris limpio
+                document.getElementById(id).disabled = false;
             });
             document.getElementById(idsCampos[0]).focus();
         }
@@ -739,14 +738,12 @@
             idsCampos.forEach(id => {
                 const elemento = document.getElementById(id);
                 localStorage.setItem(id, elemento.value);
-                
                 if(elemento.value.trim() !== "") {
                     elemento.disabled = true; 
                 } else {
                     elemento.disabled = false;
                 }
             });
-
             const textoOriginal = boton.innerText;
             boton.style.backgroundColor = "#4a7c59";
             boton.innerText = "Guardado ✓";
@@ -756,7 +753,6 @@
             }, 1000);
         }
 
-        /* LÍNEA CORREGIDA DE FORMA INFALIBLE AQUÍ */
         function abrirPasarelaPago(nombrePlan, coste) {
             planSeleccionadoTemporal = nombrePlan;
             costeSeleccionadoTemporal = coste;
