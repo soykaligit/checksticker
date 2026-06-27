@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckSticker - Mi Colección</title>
+    <!-- Librería para generar el archivo Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Carga oficial de Stripe para pasarela segura -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'system-ui', -apple-system, sans-serif;
+            background: linear-gradient(to right, 
+                #4a7c59 0%, 
+                #f4f9f5 35%, 
+                #ffffff 45%, 
+                #ffffff 55%, 
+                #f4f9f5 65%, 
+                #4a7c59 100%
+            );
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        /* VISTAS DE PANTALLA */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            z-index: 3;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* INTEGRACIÓN DEL LOGO */
+        .logo-container {
+            margin-bottom: 35px;
+            width: 100%;
+            max-width: 300px;
+            display: flex;
+            justify-content: center;
+            mix-blend-mode: multiply;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: contrast(1.05) brightness(1.02);
+        }
+
+        /* FORMULARIOS Y BOTONES GENERALES */
+        .button-group, .form-group {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p.subtitle {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s, background-color 0.2s;
+            background-color: #f8fafc;
+        }
+
+        .input-field:focus {
+            border-color: #1a56b9;
+            background-color: #ffffff;
+        }
+
+        /* Bloqueo estético en gris */
+        .input-field:disabled {
+            background-color: #f1f5f9;
+            color: #64748b;
+            border-color: #e2e8f0;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background-color: #1a56b9;
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(26,86,185,0.2);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 16px;
+            background-color: #ffffff;
+            color: #1a56b9;
+            border: 2px solid #1a56b9;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .btn-admin-login {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 20px;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        /* CONFIGURACIÓN PANTALLAS EXTENDIDAS */
+        .collection-screen, .profile-screen, .billing-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .collection-screen.active, .profile-screen.active, .billing-screen.active {
+            display: flex;
+        }
+
+        .collection-header {
+            text-align: center;
+            margin-bottom: 25px;
+            width: 100%;
+            position: relative;
+        }
+
+        .collection-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #1a4373;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .btn-user-profile {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #1a56b9;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(26,86,185,0.2);
+        }
+
+        .section-label {
+            font-size: 16px;
+            font-weight: 800;
+            color: #64748b;
+            letter-spacing: 2px;
+        }
+
+        /* LISTA DE PAÍSES */
+        .countries-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .country-item {
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f1f5f9;
+        }
+
+        /* PANEL ADMIN */
+        .admin-only-panel {
+            display: none; 
+            width: 100%;
+            background-color: #f0fdf4;
+            border: 2px dashed #107c41;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background-color: #107c41;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .revenue-box {
+            background-color: #ffffff;
+            border: 1px solid #bbf7d0;
+            padding: 12px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #14532d;
+            font-size: 16px;
+        }
+
+        .btn-excel {
+            width: 100%;
+            padding: 12px;
+            background-color: #107c41;
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ACORDEÓN DE PERFIL */
+        .accordion-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 15px;
+        }
+
+        .accordion-item {
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 18px 24px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e293b;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s;
+            color: #1a56b9;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #fafbfc;
+        }
+
+        .accordion-body {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .accordion-item.open .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-item.open .accordion-content {
+            max-height: 450px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .action-button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-modify-inline {
+            flex: 1;
+            padding: 12px;
+            background-color: #e2e8f0;
+            color: #1e293b;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-modify-inline:hover {
+            background-color: #cbd5e1;
+        }
+
+        .btn-save-inline {
+            flex: 1;
+            padding: 12px;
+            background-color: #1a56b9;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-save-inline:hover {
+            background-color: #164ca3;
+        }
+
+        /* PANTALLA DE TARIFAS DE FACTURACIÓN */
+        .pricing-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .price-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: left;
+            position: relative;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .price-card:hover {
+            border-color: #1a56b9;
+            box-shadow: 0 4px 15px rgba(26,86,185,0.08);
+        }
+
+        .price-card.selected {
+            border-color: #4a7c59;
+            background-color: #f0fdf4;
+        }
+
+        .price-card.selected::after {
+            content: "✓ Activo";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4a7c59;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 10px;
+        }
+
+        .price-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .price-cost {
+            font-size: 24px;
+            font-weight: 900;
+            color: #1a56b9;
+            margin-bottom: 8px;
+        }
+
+        .price-desc {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* MODAL DE PASARELA DE STRIPE AUTOMÁTICA */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            animation: zoomIn 0.2s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .stripe-badge {
+            background-color: #635bff;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .payment-method-row {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0 15px 0;
+        }
+
+        .btn-pay-toggle {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-pay-toggle.active {
+            border-color: #635bff;
+            color: #635bff;
+            background: #f4f5f9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA 1: BIENVENIDA -->
+    <div id="welcome-screen" class="screen active">
+        <div class="logo-container">
+            <img src="logo mejorado.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='logo mejorado.jpeg.jpeg';">
+        </div>
+        <div class="button-group">
+            <button class="btn-primary" id="go-to-register">REGISTRARSE</button>
+            <button class="btn-secondary" id="go-to-login">INICIAR SESIÓN</button>
+            <p class="footer-text">
+                ¿Aún no tienes cuenta? <br>
+                <span class="footer-link" id="link-start">Empieza tu álbum.</span>
+            </p>
+            <button class="btn-admin-login" onclick="loginComoAdministrador()">⚙️ Ajustes de Administrador</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: REGISTRO -->
+    <div id="register-screen" class="screen">
+        <div class="logo-container">
+            <img src="logo mejorado.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='logo mejorado.jpeg.jpeg';">
+        </div>
+        <h2>Crea tu Cuenta</h2>
+        <p class="subtitle">Únete para escanear y completar tu álbum</p>
+        <div class="form-group">
+            <input type="text" id="reg-nick" class="input-field" placeholder="Nick / Nombre de usuario">
+            <input type="email" id="reg-email" class="input-field" placeholder="Correo electrónico">
+            <input type="password" id="reg-pass" class="input-field" placeholder="Contraseña">
+            <button class="btn-primary" id="submit-register">CREAR CUENTA</button>
+            <button class="btn-secondary back-btn">VOLVER ATRÁS</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 3: INICIO DE SESIÓN -->
+    <div id="login-screen" class="screen">
+        <div class="logo-container">
+            <img src="logo mejorado.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='logo mejorado.jpeg.jpeg';">
+        </div>
+        <h2>¡Hola de nuevo!</h2>
+        <p class="subtitle">Ingresa tus datos para acceder a tus cromos</p>
+        <div class="form-group">
+            <input type="email" id="login-email" class="input-field" placeholder="Correo electrónico">
+            <input type="password" id="login-pass" class="input-field" placeholder="Contraseña">
+            <button class="btn-primary" id="submit-login">INGRESAR</button>
+            <button class="btn-secondary back-btn">VOLVER ATRÁS</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 4: MI COLECCIÓN CENTRADA -->
+    <div id="collection-screen" class="collection-screen">
+        <div class="collection-header">
+            <div class="collection-title">Mi Colección</div>
+            <div class="section-label">PAÍSES</div>
+            <button class="btn-user-profile" id="go-to-profile">👤 Mi Perfil</button>
+        </div>
+
+        <!-- PANEL DE ADMINISTRACIÓN -->
+        <div id="admin-panel" class="admin-only-panel">
+            <span class="admin-badge">Panel Maestro: Administrador</span>
+            
+            <div class="revenue-box">
+                💰 Balance Real en tu Cuenta Stripe: <span id="admin-revenue-text">0.00</span>€
+            </div>
+
+            <button class="btn-excel" onclick="exportarAExcel()">📊 Descargar Base de Datos en Excel</button>
+        </div>
+
+        <div class="countries-list">
+            <div class="country-item"><div class="country-left"><img src="https://flagcdn.com/w40/es.png" class="flag-icon"><div class="country-name">ESPAÑA <span class="country-count">(18)</span></div></div><div class="arrow-icon">➔</div></div>
+            <div class="country-item"><div class="country-left"><img src="https://flagcdn.com/w40/br.png" class="flag-icon"><div class="country-name">BRASIL <span class="country-count">(22)</span></div></div><div class="arrow-icon">➔</div></div>
+            <div class="country-item"><div class="country-left"><img src="https://flagcdn.com/w40/ar.png" class="flag-icon"><div class="country-name">ARGENTINA <span class="country-count">(15)</span></div></div><div class="arrow-icon">➔</div></div>
+            <div class="country-item"><div class="country-left"><img src="https://flagcdn.com/w40/fr.png" class="flag-icon"><div class="country-name">FRANCIA <span class="country-count">(20)</span></div></div><div class="arrow-icon">➔</div></div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 5: PERFIL INTELIGENTE AUTOMÁTICO -->
+    <div id="profile-screen" class="profile-screen">
+        <div class="collection-header">
+            <div class="collection-title">Mi Cuenta</div>
+            <div class="section-label">CONFIGURACIÓN GENERAL</div>
+        </div>
+
+        <div class="accordion-container">
+            <!-- Sección 1: Datos Personales -->
+            <div class="accordion-item open">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>👤 Datos Personales</span><span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <input type="text" id="profile-fullname" class="input-field" placeholder="jennifer">
+                        <input type="tel" id="profile-phone" class="input-field" placeholder="Teléfono de contacto">
+                        
+                        <div class="action-button-row">
+                            <button class="btn-modify-inline" onclick="habilitarCamposSeccion(['profile-fullname', 'profile-phone'])">Modificar</button>
+                            <button class="btn-save-inline" onclick="guardarCambiosGris(this, ['profile-fullname', 'profile-phone'])">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 2: Dirección de Envío -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>📍 Dirección de Envío</span><span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <input type="text" id="profile-address" class="input-field" placeholder="Calle, Avenida o Número">
+                        <input type="text" id="profile-city" class="input-field" placeholder="Ciudad / Provincia">
+                        <input type="text" id="profile-country" class="input-field" placeholder="País">
+                        
+                        <div class="action-button-row">
+                            <button class="btn-modify-inline" onclick="habilitarCamposSeccion(['profile-address', 'profile-city', 'profile-country'])">Modificar</button>
+                            <button class="btn-save-inline" onclick="guardarCambiosGris(this, ['profile-address', 'profile-city', 'profile-country'])">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 3: Datos de Facturación -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="goToBillingScreen()">
+                    <span>💳 Datos de Facturación</span><span class="accordion-icon" style="transform: rotate(-90deg);">▼</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="back-to-collection" style="margin-top: 30px;">VOLVER A MI COLECCIÓN</button>
+    </div>
+
+    <!-- PANTALLA 6: CUOTAS MENSUALES -->
+    <div id="billing-screen" class="billing-screen">
+        <div class="collection-header">
+            <div class="collection-title">Suscripción</div>
+            <div class="section-label">CUOTAS MENSUALES DE FACTURACIÓN</div>
+        </div>
+
+        <div class="pricing-container">
+            <div class="price-card" onclick="abrirPasarelaPago('Básico', 4.99)">
+                <div class="price-title">Plan Coleccionista Básico</div>
+                <div class="price-cost">4,99€ <span style="font-size:14px; font-weight:normal; color:#64748b;">/mes</span></div>
+                <div class="price-desc">Permite escanear hasta 50 cromos al mes.</div>
+            </div>
+
+            <div class="price-card" onclick="abrirPasarelaPago('Premium', 9.99)">
+                <div class="price-title">Plan Oro Pro</div>
+                <div class="price-cost">9,99€ <span style="font-size:14px; font-weight:normal; color:#64748b;">/mes</span></div>
+                <div class="price-desc">Escaneos ilimitados y alertas automáticas.</div>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="back-to-profile-from-billing">VOLVER ATRÁS</button>
+    </div>
+
+    <!-- 🌐 MODAL DE PASARELA STRIPE -->
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="stripe-badge">Secure payment with Stripe</div>
+            <h3 id="modal-plan-title" style="color:#1e293b; margin-bottom: 5px;">Método de Pago</h3>
+            <p class="subtitle" style="margin-bottom:15px;">Los fondos se transferirán a tu cuenta asociada</p>
+            
+            <div class="payment-method-row">
+                <button id="pay-card-tab" class="btn-pay-toggle active" onclick="setPaymentMethod('tarjeta')">💳 Tarjeta Bancaria</button>
+                <button id="pay-bizum-tab" class="btn-pay-toggle" onclick="setPaymentMethod('bizum')">📱 Bizum Directo</button>
+            </div>
+
+            <div id="form-tarjeta" class="form-group" style="gap:10px;">
+                <input type="text" class="input-field" placeholder="Número de Tarjeta (Visa / Mastercard)">
+                <div style="display:flex; gap:10px;">
+                    <input type="text" class="input-field" placeholder="MM/AA">
+                    <input type="text" class="input-field" placeholder="CVC">
+                </div>
+            </div>
+
+            <div id="form-bizum" class="form-group" style="display:none;">
+                <input type="tel" class="input-field" placeholder="Número vinculado a Bizum">
+            </div>
+
+            <button class="btn-primary" style="margin-top:20px; padding:12px; background-color:#635bff;" onclick="procesarPagoExitoso()">Proceder con Stripe</button>
+            <button class="btn-admin-login" style="margin-top:10px;" onclick="cerrarPasarelaPago()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        let esModoAdministrador = false; 
+        const PIN_ADMINISTRADOR = "11051978";
+        let planSeleccionadoTemporal = "";
+        let costeSeleccionadoTemporal = 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedEmail = localStorage.getItem('remembered_email');
+            const savedPass = localStorage.getItem('remembered_password');
+            if (savedEmail && savedPass) {
+                document.getElementById('login-email').value = savedEmail;
+                document.getElementById('login-pass').value = savedPass;
+            }
+
+            const camposPerfil = ['profile-fullname', 'profile-phone', 'profile-address', 'profile-city', 'profile-country'];
+            camposPerfil.forEach(id => {
+                const valorGuardado = localStorage.getItem(id);
+                const elemento = document.getElementById(id);
+                if (valorGuardado) {
+                    elemento.value = valorGuardado;
+                    elemento.disabled = true; // Bloqueado en gris si tiene datos
+                } else {
+                    elemento.disabled = false; // Libre para escribir si está vacío
+                }
+            });
+
+            marcarPlanActivoVisual();
+            actualizarCajaIngresosAdmin();
+        });
+
+        function marcarPlanActivoVisual() {
+            const planActivo = localStorage.getItem('plan_facturacion_selected');
+            document.querySelectorAll('.price-card').forEach(card => {
+                card.classList.remove('selected');
+                if(planActivo && card.innerText.includes(planActivo)) card.classList.add('selected');
+            });
+        }
+
+        function actualizarCajaIngresosAdmin() {
+            const ingresosTotales = localStorage.getItem('checksticker_ingresos_acumulados') || "0.00";
+            document.getElementById('admin-revenue-text').innerText = parseFloat(ingresosTotales).toFixed(2);
+        }
+
+        function habilitarCamposSeccion(idsCampos) {
+            idsCampos.forEach(id => {
+                document.getElementById(id).disabled = false; // Quita el gris limpio
+            });
+            document.getElementById(idsCampos[0]).focus();
+        }
+
+        function guardarCambiosGris(boton, idsCampos) {
+            idsCampos.forEach(id => {
+                const elemento = document.getElementById(id);
+                localStorage.setItem(id, elemento.value);
+                
+                if(elemento.value.trim() !== "") {
+                    elemento.disabled = true; 
+                } else {
+                    elemento.disabled = false;
+                }
+            });
+
+            const textoOriginal = boton.innerText;
+            boton.style.backgroundColor = "#4a7c59";
+            boton.innerText = "Guardado ✓";
+            setTimeout(() => {
+                boton.style.backgroundColor = "#1a56b9";
+                boton.innerText = textoOriginal;
+            }, 1000);
+        }
+
+        /* LÍNEA CORREGIDA DE FORMA INFALIBLE AQUÍ */
+        function abrirPasarelaPago(nombrePlan, coste) {
+            planSeleccionadoTemporal = nombrePlan;
+            costeSeleccionadoTemporal = coste;
+            document.getElementById('modal-plan-title').innerText = "Cobro Alta: " + nombrePlan;
+            paymentModal.style.display = "flex";
+        }
+
+        function cerrarPasarelaPago() { paymentModal.style.display = "none"; }
+
+        function setPaymentMethod(metodo) {
+            if(metodo === 'tarjeta') {
+                document.getElementById('pay-card-tab').classList.add('active');
+                document.getElementById('pay-bizum-tab').classList.remove('active');
+                document.getElementById('form-tarjeta').style.display = "flex";
+                document.getElementById('form-bizum').style.display = "none";
+            } else {
+                document.getElementById('pay-card-tab').classList.remove('active');
+                document.getElementById('pay-bizum-tab').classList.add('active');
+                document.getElementById('form-tarjeta').style.display = "none";
+                document.getElementById('form-bizum').style.display = "flex";
+            }
+        }
+
+        function procesarPagoExitoso() {
+            localStorage.setItem('plan_facturacion_selected', planSeleccionadoTemporal);
+            let ingresosActuales = parseFloat(localStorage.getItem('checksticker_ingresos_acumulados') || "0.00");
+            ingresosActuales += costeSeleccionadoTemporal;
+            localStorage.setItem('checksticker_ingresos_acumulados', ingresosActuales.toString());
+
+            marcarPlanActivoVisual();
+            actualizarCajaIngresosAdmin();
+            paymentModal.style.display = "none";
+        }
+
+        function goToBillingScreen() { changeScreen(billingScreen); }
+        function loginComoAdministrador() {
+            const pin = prompt("Introduce el PIN Maestro:");
+            if (pin === PIN_ADMINISTRADOR) { esModoAdministrador = true; changeScreen(collectionScreen); }
+        }
+
+        function changeScreen(screenToShow) {
+            welcomeScreen.classList.remove('active'); registerScreen.classList.remove('active');
+            loginScreen.classList.remove('active'); collectionScreen.classList.remove('active');
+            profileScreen.classList.remove('active'); billingScreen.classList.remove('active');
+            if (screenToShow === collectionScreen) {
+                adminPanel.style.display = esModoAdministrador ? "block" : "none";
+                actualizarCajaIngresosAdmin();
+            }
+            screenToShow.classList.add('active');
+        }
+
+        function toggleAccordion(header) { header.parentElement.classList.toggle('open'); }
+
+        btnGoToRegister.addEventListener('click', () => { esModoAdministrador = false; changeScreen(registerScreen); });
+        linkStart.addEventListener('click', () => { esModoAdministrador = false; changeScreen(registerScreen); });
+        btnGoToLogin.addEventListener('click', () => { esModoAdministrador = false; changeScreen(loginScreen); });
+        btnGoToProfile.addEventListener('click', () => changeScreen(profileScreen));
+        btnBackToCollection.addEventListener('click', () => changeScreen(collectionScreen));
+        btnBackToProfileFromBilling.addEventListener('click', () => changeScreen(profileScreen));
+        backButtons.forEach(btn => btn.addEventListener('click', () => changeScreen(welcomeScreen)));
+
+        btnSubmitRegister.addEventListener('click', () => {
+            const nick = document.getElementById('reg-nick').value;
+            const email = document.getElementById('reg-email').value;
+            if(!nick || !email) return;
+            localStorage.setItem('remembered_email', email);
+            changeScreen(collectionScreen);
+        });
+
+        btnSubmitLogin.addEventListener('click', () => {
+            const email = document.getElementById('login-email').value;
+            if(!email) return;
+            localStorage.setItem('remembered_email', email);
+            changeScreen(collectionScreen);
+        });
+
+        function exportarAExcel() {
+            const hoja = XLSX.utils.json_to_sheet([{ "Nick": "Admin", "Fecha": new Date().toLocaleString() }]);
+            const libro = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(libro, hoja, "Usuarios");
+            XLSX.writeFile(libro, "Registro_CheckSticker.xlsx");
+        }
+    </script>
+</body>
+</html>
