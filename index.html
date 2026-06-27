@@ -29,11 +29,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            padding: 40px 10px;
             overflow-x: hidden;
         }
 
-        /* VISTAS DE PANTALLA */
+        /* VISTAS DE PANTALLA GENERALES */
         .screen {
             display: none;
             flex-direction: column;
@@ -54,11 +54,11 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* INTEGRACIÓN DEL LOGO ORIGINAL */
+        /* INTEGRACIÓN ESTILIZADA DEL LOGO */
         .logo-container {
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             width: 100%;
-            max-width: 300px;
+            max-width: 260px;
             display: flex;
             justify-content: center;
             mix-blend-mode: multiply;
@@ -69,13 +69,13 @@
             height: auto;
             display: block;
             filter: contrast(1.05) brightness(1.02);
-            border-radius: 15px; /* Por si la imagen es cuadrada, le da un toque suave */
+            border-radius: 15px;
         }
 
-        /* FORMULARIOS Y BOTONES GENERALES */
+        /* FORMULARIOS Y BOTONES */
         .button-group, .form-group {
             width: 100%;
-            max-width: 320px;
+            max-width: 340px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -84,31 +84,49 @@
 
         h2 {
             color: #1e293b;
-            margin-bottom: 8px;
-            font-size: 24px;
+            margin-bottom: 6px;
+            font-size: 26px;
             font-weight: bold;
+            letter-spacing: -0.5px;
         }
 
         p.subtitle {
             color: #64748b;
             font-size: 14px;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .footer-text {
+            color: #1e293b;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 5px;
+        }
+
+        .footer-link {
+            color: #1a56b9;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: bold;
         }
 
         .input-field {
             width: 100%;
-            padding: 14px 20px;
+            padding: 15px 22px;
             border: 2px solid #e2e8f0;
             border-radius: 25px;
             font-size: 15px;
             outline: none;
             transition: border-color 0.2s, background-color 0.2s;
             background-color: #f8fafc;
+            color: #1e293b;
         }
 
         .input-field:focus {
             border-color: #1a56b9;
             background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(26,86,185,0.08);
         }
 
         .input-field:disabled {
@@ -129,6 +147,11 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(26,86,185,0.2);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
         }
 
         .btn-secondary {
@@ -142,6 +165,11 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8fafc;
         }
 
         .btn-admin-login {
@@ -155,7 +183,7 @@
             font-weight: 500;
         }
 
-        /* CONFIGURACIÓN PANTALLAS EXTENDIDAS */
+        /* CONFIGURACIÓN PANTALLAS EXTENDIDAS DE LA INTERFAZ */
         .collection-screen, .profile-screen, .billing-screen {
             display: none;
             flex-direction: column;
@@ -166,7 +194,18 @@
             animation: fadeIn 0.3s ease-in-out;
         }
 
-        .collection-screen.active, .profile-screen.active, .billing-screen.active {
+        /* Ajustamos el tamaño máximo para la cuadrícula de 6 cromos por fila */
+        .album-page-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .collection-screen.active, .profile-screen.active, .billing-screen.active, .album-page-screen.active {
             display: flex;
         }
 
@@ -178,7 +217,7 @@
         }
 
         .collection-title {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: bold;
             color: #1a4373;
             text-transform: uppercase;
@@ -213,7 +252,8 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
+            margin-top: 15px;
         }
 
         .country-item {
@@ -221,14 +261,33 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 24px;
+            padding: 18px 24px;
             border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
             border: 1px solid #f1f5f9;
+            transition: transform 0.2s;
         }
 
-        /* PANEL ADMIN MEJORADO CON SECCIÓN DE INGRESOS */
+        .country-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .country-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .flag-icon {
+            width: 38px;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+        }
+
+        /* PANEL ADMIN */
         .admin-only-panel {
             display: none; 
             width: 100%;
@@ -275,7 +334,194 @@
             cursor: pointer;
         }
 
-        /* ACORDEÓN DE PERFIL */
+        /* MAQUETACIÓN DE EXACTAMENTE 6 CROMOS POR FILA */
+        .album-sub-info {
+            font-size: 15px;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stickers-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); /* Configurado a 6 columnas fijos */
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .sticker-card {
+            background: white;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 8px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 140px;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+
+        .sticker-card.pending {
+            filter: grayscale(100%);
+            opacity: 0.55;
+        }
+
+        .sticker-number {
+            font-size: 20px;
+            font-weight: 900;
+            color: #1e293b;
+        }
+
+        .sticker-player {
+            font-size: 10px;
+            font-weight: bold;
+            color: #475569;
+            margin-top: 2px;
+            text-transform: uppercase;
+            line-height: 1.1;
+            word-break: break-word;
+        }
+
+        .sticker-team {
+            font-size: 8px;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        /* CAPA DE ESCÁNER AL PONERSE ENCIMA DEL CROMO (HOVER INTERACTIVO) */
+        .sticker-hover-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 86, 185, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        /* Al ponerse encima, el botón aparece de forma nativa */
+        .sticker-card:hover .sticker-hover-overlay {
+            opacity: 1;
+        }
+
+        .inner-scan-btn {
+            background: white;
+            color: #1a56b9;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            pointer-events: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        /* CONTENEDOR SEMÁFOROS COMPACTOS */
+        .semaphores-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .semaphore-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid transparent;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+        .semaphore-dot:active {
+            transform: scale(0.9);
+        }
+
+        .semaphore-dot.tengo { background-color: #22c55e; }
+        .semaphore-dot.falta { background-color: #ef4444; }
+        .semaphore-dot.repetidos { 
+            background-color: #3b82f6; 
+            width: auto;
+            min-width: 18px;
+            border-radius: 9px;
+            padding: 0 4px;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        /* Luces del semáforo encendidas */
+        .sticker-card[data-status="tengo"] .semaphore-dot.tengo { border-color: #1e293b; box-shadow: 0 0 4px rgba(34,197,94,0.6); }
+        .sticker-card[data-status="falta"] .semaphore-dot.falta { border-color: #1e293b; box-shadow: 0 0 4px rgba(239,68,68,0.6); }
+        .sticker-card[data-status="repetidos"] .semaphore-dot.repetidos { border-color: #1e293b; box-shadow: 0 0 4px rgba(59,130,246,0.6); }
+
+        .repetidos-counter-control {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .btn-counter-small {
+            background: rgba(255,255,255,0.3);
+            border: none;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            width: 11px;
+            height: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .admin-action-btn {
+            background-color: #107c41;
+            color: white;
+            border: none;
+            font-size: 8px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin-top: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            z-index: 6;
+            position: relative;
+        }
+
+        /* AVISO DE FIN DE ÁLBUM COHESIVO */
+        .scroll-loading-badge {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: bold;
+            margin: 10px 0 25px 0;
+            padding: 6px 16px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        /* ACORDEONES PERFIL */
         .accordion-container {
             width: 100%;
             display: flex;
@@ -289,14 +535,12 @@
             background-color: #ffffff;
             border-radius: 20px;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             overflow: hidden;
         }
 
         .accordion-header {
             width: 100%;
             padding: 18px 24px;
-            background: #ffffff;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -304,12 +548,6 @@
             font-weight: bold;
             color: #1e293b;
             cursor: pointer;
-            user-select: none;
-        }
-
-        .accordion-icon {
-            transition: transform 0.3s;
-            color: #1a56b9;
         }
 
         .accordion-content {
@@ -324,11 +562,6 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            text-align: left;
-        }
-
-        .accordion-item.open .accordion-icon {
-            transform: rotate(180deg);
         }
 
         .accordion-item.open .accordion-content {
@@ -343,177 +576,34 @@
             width: 100%;
         }
 
-        .btn-modify-inline {
-            flex: 1;
-            padding: 12px;
-            background-color: #e2e8f0;
-            color: #1e293b;
-            border: none;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
+        .btn-modify-inline, .btn-save-inline {
+            flex: 1; padding: 12px; border: none; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer;
         }
+        .btn-modify-inline { background-color: #e2e8f0; color: #1e293b; }
+        .btn-save-inline { background-color: #1a56b9; color: white; }
 
-        .btn-modify-inline:hover {
-            background-color: #cbd5e1;
-        }
-
-        .btn-save-inline {
-            flex: 1;
-            padding: 12px;
-            background-color: #1a56b9;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-save-inline:hover {
-            background-color: #164ca3;
-        }
-
-        /* PANTALLA DE TARIFAS DE FACTURACIÓN */
-        .pricing-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .price-card {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: left;
-            position: relative;
-            cursor: pointer;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .price-card:hover {
-            border-color: #1a56b9;
-            box-shadow: 0 4px 15px rgba(26,86,185,0.08);
-        }
-
-        .price-card.selected {
-            border-color: #4a7c59;
-            background-color: #f0fdf4;
-        }
-
-        .price-card.selected::after {
-            content: "✓ Activo";
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #4a7c59;
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 10px;
-        }
-
-        .price-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #1e293b;
-            margin-bottom: 5px;
-        }
-
-        .price-cost {
-            font-size: 24px;
-            font-weight: 900;
-            color: #1a56b9;
-            margin-bottom: 8px;
-        }
-
-        .price-desc {
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        /* MODAL DE PASARELA DE STRIPE AUTOMÁTICA */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-card {
-            background: white;
-            padding: 30px;
-            border-radius: 25px;
-            width: 100%;
-            max-width: 350px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            animation: zoomIn 0.2s ease-out;
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .stripe-badge {
-            background-color: #635bff;
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 3px 10px;
-            border-radius: 5px;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
-        .payment-method-row {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0 15px 0;
-        }
-
-        .btn-pay-toggle {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            background: white;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-pay-toggle.active {
-            border-color: #635bff;
-            color: #635bff;
-            background: #f4f5f9;
-        }
+        /* PASARELA STRIPE */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
+        .modal-card { background: white; padding: 30px; border-radius: 25px; width: 100%; max-width: 350px; text-align: center; }
+        .stripe-badge { background-color: #635bff; color: white; font-size: 11px; padding: 3px 10px; border-radius: 5px; display: inline-block; margin-bottom: 15px; }
+        .payment-method-row { display: flex; gap: 10px; margin: 10px 0 15px 0; }
+        .btn-pay-toggle { flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 15px; background: white; cursor: pointer; font-weight: bold; }
+        .btn-pay-toggle.active { border-color: #635bff; color: #635bff; }
     </style>
 </head>
 <body>
 
     <!-- PANTALLA 1: BIENVENIDA -->
     <div id="welcome-screen" class="screen active">
-        <!-- 🛡️ LOGOTIPO REAL RECUPERADO (Ruta asegurada para GitHub Pages) -->
         <div class="logo-container">
-            <img src="Logotipo%20mejorado.jpeg.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='Logotipo mejorado.jpeg';">
+            <img src="logo%20mejorado.jpeg" alt="CheckSticker Logo" class="logo-img">
         </div>
         <div class="button-group">
-            <button class="btn-primary" id="go-to-register">REGISTRARSE</button>
-            <button class="btn-secondary" id="go-to-login">INICIAR SESIÓN</button>
+            <button class="btn-primary" onclick="changeScreen('register-screen')">REGISTRARSE</button>
+            <button class="btn-secondary" onclick="changeScreen('login-screen')">INICIAR SESIÓN</button>
             <p class="footer-text">
                 ¿Aún no tienes cuenta? <br>
-                <span class="footer-link" id="link-start">Empieza tu álbum.</span>
+                <span class="footer-link" onclick="changeScreen('register-screen')">Empieza tu álbum.</span>
             </p>
             <button class="btn-admin-login" onclick="loginComoAdministrador()">⚙️ Ajustes de Administrador</button>
         </div>
@@ -522,7 +612,7 @@
     <!-- PANTALLA 2: REGISTRO -->
     <div id="register-screen" class="screen">
         <div class="logo-container">
-            <img src="Logotipo%20mejorado.jpeg.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='Logotipo mejorado.jpeg';">
+            <img src="logo%20mejorado.jpeg" alt="CheckSticker Logo" class="logo-img">
         </div>
         <h2>Crea tu Cuenta</h2>
         <p class="subtitle">Únete para escanear y completar tu álbum</p>
@@ -530,54 +620,89 @@
             <input type="text" id="reg-nick" class="input-field" placeholder="Nick / Nombre de usuario">
             <input type="email" id="reg-email" class="input-field" placeholder="Correo electrónico">
             <input type="password" id="reg-pass" class="input-field" placeholder="Contraseña">
-            <button class="btn-primary" id="submit-register">CREAR CUENTA</button>
-            <button class="btn-secondary back-btn">VOLVER ATRÁS</button>
+            <button class="btn-primary" onclick="procesarRegistro()">CREAR CUENTA</button>
+            <button class="btn-secondary" onclick="changeScreen('welcome-screen')">VOLVER ATRÁS</button>
         </div>
     </div>
 
     <!-- PANTALLA 3: INICIO DE SESIÓN -->
     <div id="login-screen" class="screen">
         <div class="logo-container">
-            <img src="Logotipo%20mejorado.jpeg.jpeg" alt="CheckSticker Logo" class="logo-img" onerror="this.onerror=null; this.src='Logotipo mejorado.jpeg';">
+            <img src="logo%20mejorado.jpeg" alt="CheckSticker Logo" class="logo-img">
         </div>
         <h2>¡Hola de nuevo!</h2>
         <p class="subtitle">Ingresa tus datos para acceder a tus cromos</p>
         <div class="form-group">
             <input type="email" id="login-email" class="input-field" placeholder="Correo electrónico">
             <input type="password" id="login-pass" class="input-field" placeholder="Contraseña">
-            <button class="btn-primary" id="submit-login">INGRESAR</button>
-            <button class="btn-secondary back-btn">VOLVER ATRÁS</button>
+            <button class="btn-primary" onclick="procesarLogin()">INGRESAR</button>
+            <button class="btn-secondary" onclick="changeScreen('welcome-screen')">VOLVER ATRÁS</button>
         </div>
     </div>
 
-    <!-- PANTALLA 4: MI COLECCIÓN CENTRADA -->
+    <!-- PANTALLA 4: MI COLECCIÓN -->
     <div id="collection-screen" class="collection-screen">
         <div class="collection-header">
             <div class="collection-title">Mi Colección</div>
             <div class="section-label">PAÍSES</div>
-            <button class="btn-user-profile" id="go-to-profile">👤 Mi Perfil</button>
+            <button class="btn-user-profile" onclick="changeScreen('profile-screen')">👤 Mi Perfil</button>
         </div>
 
-        <!-- PANEL DE ADMINISTRACIÓN -->
         <div id="admin-panel" class="admin-only-panel">
             <span class="admin-badge">Panel Maestro: Administrador</span>
-            
-            <div class="revenue-box">
-                💰 Balance Real en tu Cuenta Stripe: <span id="admin-revenue-text">0.00</span>€
-            </div>
-
+            <div class="revenue-box">💰 Balance en tu Cuenta Stripe: <span id="admin-revenue-text">0.00</span>€</div>
             <button class="btn-excel" onclick="exportarAExcel()">📊 Descargar Base de Datos en Excel</button>
         </div>
 
         <div class="countries-list">
-            <div class="country-item"><div class="country-left"><img src="https://flagcdn.com/w40/es.png" class="flag-icon"><div class="country-name">ESPAÑA <span class="country-count">(18)</span></div></div><div class="arrow-icon">➔</div></div>
-            <div class="country-item"><div class="country-left"><img src="https://flagcdn.com/w40/br.png" class="flag-icon"><div class="country-name">BRASIL <span class="country-count">(22)</span></div></div><div class="arrow-icon">➔</div></div>
-            <div class="country-item"><div class="country-left"><img src="https://flagcdn.com/w40/ar.png" class="flag-icon"><div class="country-name">ARGENTINA <span class="country-count">(15)</span></div></div><div class="arrow-icon">➔</div></div>
-            <div class="country-item"><div class="country-left"><img src="https://flagcdn.com/w40/fr.png" class="flag-icon"><div class="country-name">FRANCIA <span class="country-count">(20)</span></div></div><div class="arrow-icon">➔</div></div>
+            <div class="country-item" onclick="abrirPaginaAlbum('ESPAÑA', 'EDICIONES ESTE 96/97')">
+                <div class="country-left">
+                    <img src="https://flagcdn.com/w40/es.png" class="flag-icon">
+                    <div><strong>ESPAÑA</strong> <br><span style="color:#64748b; font-size:12px;">Ediciones Este 96/97</span></div>
+                </div>
+                <div>➔</div>
+            </div>
+            <div class="country-item" onclick="abrirPaginaAlbum('BRASIL', 'COPA DO MUNDO')">
+                <div class="country-left">
+                    <img src="https://flagcdn.com/w40/br.png" class="flag-icon">
+                    <div><strong>BRASIL</strong> <br><span style="color:#64748b; font-size:12px;">Copa do Mundo</span></div>
+                </div>
+                <div>➔</div>
+            </div>
+            <div class="country-item" onclick="abrirPaginaAlbum('ARGENTINA', 'APERTURA 98')">
+                <div class="country-left">
+                    <img src="https://flagcdn.com/w40/ar.png" class="flag-icon">
+                    <div><strong>ARGENTINA</strong> <br><span style="color:#64748b; font-size:12px;">Apertura 98</span></div>
+                </div>
+                <div>➔</div>
+            </div>
+            <div class="country-item" onclick="abrirPaginaAlbum('FRANCIA', 'FRANCE 98')">
+                <div class="country-left">
+                    <img src="https://flagcdn.com/w40/fr.png" class="flag-icon">
+                    <div><strong>FRANCIA</strong> <br><span style="color:#64748b; font-size:12px;">France 98</span></div>
+                </div>
+                <div>➔</div>
+            </div>
         </div>
     </div>
 
-    <!-- PANTALLA 5: PERFIL INTELIGENTE AUTOMÁTICO -->
+    <!-- 📋 PANTALLA HOJA DE ÁLBUM -->
+    <div id="album-page-screen" class="album-page-screen">
+        <div class="collection-header">
+            <div class="collection-title" id="album-country-title">ESPAÑA</div>
+            <div class="album-sub-info" id="album-collection-title">EDICIONES ESTE 96/97</div>
+        </div>
+
+        <input type="file" id="camera-hardware-input" accept="image/*" capture="environment" style="display: none;" onchange="procesarFotoEscaneada(this)">
+
+        <div class="stickers-grid" id="stickers-container"></div>
+        
+        <div class="scroll-loading-badge" id="scroll-info-badge">Cargando colección completa...</div>
+
+        <button class="btn-primary" onclick="changeScreen('collection-screen')">VOLVER A PAÍSES</button>
+    </div>
+
+    <!-- PANTALLA 5: PERFIL -->
     <div id="profile-screen" class="profile-screen">
         <div class="collection-header">
             <div class="collection-title">Mi Cuenta</div>
@@ -586,14 +711,11 @@
 
         <div class="accordion-container">
             <div class="accordion-item open">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span>👤 Datos Personales</span><span class="accordion-icon">▼</span>
-                </div>
+                <div class="accordion-header" onclick="toggleAccordion(this)"><span>👤 Datos Personales</span><span>▼</span></div>
                 <div class="accordion-content">
                     <div class="accordion-body">
                         <input type="text" id="profile-fullname" class="input-field" placeholder="Nombre completo">
                         <input type="tel" id="profile-phone" class="input-field" placeholder="Teléfono de contacto">
-                        
                         <div class="action-button-row">
                             <button class="btn-modify-inline" onclick="habilitarCamposSeccion(['profile-fullname', 'profile-phone'])">Modificar</button>
                             <button class="btn-save-inline" onclick="guardarCambiosGris(this, ['profile-fullname', 'profile-phone'])">Guardar</button>
@@ -603,15 +725,12 @@
             </div>
 
             <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span>📍 Dirección de Envío</span><span class="accordion-icon">▼</span>
-                </div>
+                <div class="accordion-header" onclick="toggleAccordion(this)"><span>📍 Dirección de Envío</span><span>▼</span></div>
                 <div class="accordion-content">
                     <div class="accordion-body">
                         <input type="text" id="profile-address" class="input-field" placeholder="Calle, Avenida o Número">
                         <input type="text" id="profile-city" class="input-field" placeholder="Ciudad / Provincia">
                         <input type="text" id="profile-country" class="input-field" placeholder="País">
-                        
                         <div class="action-button-row">
                             <button class="btn-modify-inline" onclick="habilitarCamposSeccion(['profile-address', 'profile-city', 'profile-country'])">Modificar</button>
                             <button class="btn-save-inline" onclick="guardarCambiosGris(this, ['profile-address', 'profile-city', 'profile-country'])">Guardar</button>
@@ -621,16 +740,14 @@
             </div>
 
             <div class="accordion-item">
-                <div class="accordion-header" onclick="goToBillingScreen()">
-                    <span>💳 Datos de Facturación</span><span class="accordion-icon" style="transform: rotate(-90deg);">▼</span>
-                </div>
+                <div class="accordion-header" onclick="changeScreen('billing-screen')"><span>💳 Datos de Facturación</span><span>▼</span></div>
             </div>
         </div>
 
-        <button class="btn-primary" id="back-to-collection" style="margin-top: 30px;">VOLVER A MI COLECCIÓN</button>
+        <button class="btn-primary" onclick="changeScreen('collection-screen')" style="margin-top: 30px;">VOLVER A MI COLECCIÓN</button>
     </div>
 
-    <!-- PANTALLA 6: CUOTAS MENSUALES -->
+    <!-- PANTALLA 6: SUSCRIPCIÓN -->
     <div id="billing-screen" class="billing-screen">
         <div class="collection-header">
             <div class="collection-title">Suscripción</div>
@@ -640,45 +757,33 @@
         <div class="pricing-container">
             <div class="price-card" onclick="abrirPasarelaPago('Básico', 4.99)">
                 <div class="price-title">Plan Coleccionista Básico</div>
-                <div class="price-cost">4,99€ <span style="font-size:14px; font-weight:normal; color:#64748b;">/mes</span></div>
+                <div class="price-cost">4,99€</div>
                 <div class="price-desc">Permite escanear hasta 50 cromos al mes.</div>
             </div>
-
             <div class="price-card" onclick="abrirPasarelaPago('Premium', 9.99)">
                 <div class="price-title">Plan Oro Pro</div>
-                <div class="price-cost">9,99€ <span style="font-size:14px; font-weight:normal; color:#64748b;">/mes</span></div>
+                <div class="price-cost">9,99€</div>
                 <div class="price-desc">Escaneos ilimitados y alertas automáticas.</div>
             </div>
         </div>
-
-        <button class="btn-primary" id="back-to-profile-from-billing">VOLVER ATRÁS</button>
+        <button class="btn-primary" onclick="changeScreen('profile-screen')">VOLVER ATRÁS</button>
     </div>
 
-    <!-- 🌐 MODAL DE PASARELA STRIPE -->
+    <!-- MODAL STRIPE -->
     <div id="payment-modal" class="modal-overlay">
         <div class="modal-card">
             <div class="stripe-badge">Secure payment with Stripe</div>
-            <h3 id="modal-plan-title" style="color:#1e293b; margin-bottom: 5px;">Método de Pago</h3>
-            <p class="subtitle" style="margin-bottom:15px;">Los fondos se transferirán a tu cuenta asociada</p>
-            
+            <h3 id="modal-plan-title">Método de Pago</h3>
             <div class="payment-method-row">
-                <button id="pay-card-tab" class="btn-pay-toggle active" onclick="setPaymentMethod('tarjeta')">💳 Tarjeta Bancaria</button>
-                <button id="pay-bizum-tab" class="btn-pay-toggle" onclick="setPaymentMethod('bizum')">📱 Bizum Directo</button>
+                <button id="pay-card-tab" class="btn-pay-toggle active" onclick="setPaymentMethod('tarjeta')">💳 Tarjeta</button>
+                <button id="pay-bizum-tab" class="btn-pay-toggle" onclick="setPaymentMethod('bizum')">📱 Bizum</button>
             </div>
-
-            <div id="form-tarjeta" class="form-group" style="gap:10px;">
-                <input type="text" class="input-field" placeholder="Número de Tarjeta (Visa / Mastercard)">
-                <div style="display:flex; gap:10px;">
-                    <input type="text" class="input-field" placeholder="MM/AA">
-                    <input type="text" class="input-field" placeholder="CVC">
-                </div>
+            <div id="form-tarjeta" class="form-group">
+                <input type="text" class="input-field" placeholder="Número de Tarjeta">
+                <div style="display:flex; gap:10px;"><input type="text" class="input-field" placeholder="MM/AA"><input type="text" class="input-field" placeholder="CVC"></div>
             </div>
-
-            <div id="form-bizum" class="form-group" style="display:none;">
-                <input type="tel" class="input-field" placeholder="Número vinculado a Bizum">
-            </div>
-
-            <button class="btn-primary" style="margin-top:20px; padding:12px; background-color:#635bff;" onclick="procesarPagoExitoso()">Proceder con Stripe</button>
+            <div id="form-bizum" class="form-group" style="display:none;"><input type="tel" class="input-field" placeholder="Número de Bizum"></div>
+            <button class="btn-primary" style="margin-top:20px; background-color:#635bff;" onclick="procesarPagoExitoso()">Proceder con Stripe</button>
             <button class="btn-admin-login" style="margin-top:10px;" onclick="cerrarPasarelaPago()">Cancelar</button>
         </div>
     </div>
@@ -688,30 +793,209 @@
         const PIN_ADMINISTRADOR = "11051978";
         let planSeleccionadoTemporal = "";
         let costeSeleccionadoTemporal = 0;
+        let idCromoEscaneandoActivo = null;
+
+        // Base de datos de 100 cromos estables expandidos nativamente para no comprimir líneas
+        let BD_CROMOS = [];
+        const nombresEjemplo = ["Abel", "Guardiola", "Hierro", "Raúl", "Luis Enrique", "Caminero", "Zubizarreta", "Albelda", "Morientes", "Mendieta"];
+        const equiposEjemplo = ["F.C. Barcelona", "Real Madrid", "Atlético Madrid", "Valencia C.F.", "Athletic Club"];
+        
+        for (let i = 1; i <= 100; i++) {
+            BD_CROMOS.push({
+                id: i,
+                jugador: nombresEjemplo[i % nombresEjemplo.length],
+                equipo: equiposEjemplo[i % equiposEjemplo.length],
+                estado: i % 3 === 0 ? "tengo" : (i % 3 === 1 ? "falta" : "repetidos"),
+                cantidadRepetidos: i % 3 === 2 ? i % 4 : 0,
+                autorizado: true
+            });
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedEmail = localStorage.getItem('remembered_email');
             const savedPass = localStorage.getItem('remembered_password');
-            if (savedEmail && savedPass) {
-                document.getElementById('login-email').value = savedEmail;
-                document.getElementById('login-pass').value = savedPass;
-            }
+            if (savedEmail) document.getElementById('login-email').value = savedEmail;
+            if (savedPass) document.getElementById('login-pass').value = savedPass;
 
             const camposPerfil = ['profile-fullname', 'profile-phone', 'profile-address', 'profile-city', 'profile-country'];
             camposPerfil.forEach(id => {
                 const valorGuardado = localStorage.getItem(id);
-                const elemento = document.getElementById(id);
                 if (valorGuardado) {
-                    elemento.value = valorGuardado;
-                    elemento.disabled = true;
-                } else {
-                    elemento.disabled = false;
+                    document.getElementById(id).value = valorGuardado;
+                    document.getElementById(id).disabled = true;
                 }
             });
-
             marcarPlanActivoVisual();
             actualizarCajaIngresosAdmin();
         });
+
+        function abrirPaginaAlbum(pais, coleccion) {
+            document.getElementById('album-country-title').innerText = pais;
+            document.getElementById('album-collection-title').innerText = coleccion;
+            renderizarCuadriculaCromos();
+            changeScreen('album-page-screen');
+        }
+
+        function renderizarCuadriculaCromos() {
+            const container = document.getElementById('stickers-container');
+            if(!container) return;
+            container.innerHTML = "";
+
+            BD_CROMOS.forEach(cromo => {
+                const card = document.createElement('div');
+                card.className = `sticker-card ${cromo.autorizado ? '' : 'pending'}`;
+                card.setAttribute('data-status', cromo.estado);
+
+                card.innerHTML = `
+                    <div class="sticker-hover-overlay" onclick="activarDisparadorCamara(${cromo.id})">
+                        <button class="inner-scan-btn">📷 Escanear</button>
+                    </div>
+
+                    <div class="sticker-number">${cromo.id}</div>
+                    <div>
+                        <div class="sticker-player">${cromo.jugador}</div>
+                        <div class="sticker-team">${cromo.equipo}</div>
+                    </div>
+                    
+                    <div class="semaphores-container">
+                        <div class="semaphore-dot tengo" title="Tengo" onclick="cambiarEstadoCromo(${cromo.id}, 'tengo', event)"></div>
+                        <div class="semaphore-dot falta" title="Falta" onclick="cambiarEstadoCromo(${cromo.id}, 'falta', event)"></div>
+                        <div class="semaphore-dot repetidos" title="Repetidos">
+                            <div class="repetidos-counter-control">
+                                <button class="btn-counter-small" onclick="modificarContadorRepetidos(${cromo.id}, -1, event)">-</button>
+                                <span>${cromo.cantidadRepetidos}</span>
+                                <button class="btn-counter-small" onclick="modificarContadorRepetidos(${cromo.id}, 1, event)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${esModoAdministrador && !cromo.autorizado ? `<button class="admin-action-btn" onclick="autorizarCromo(${cromo.id}, event)">Aprobar</button>` : ''}
+                `;
+                container.appendChild(card);
+            });
+
+            const infoBadge = document.getElementById('scroll-info-badge');
+            if(infoBadge) infoBadge.innerText = `Mostrando el total de la colección (${BD_CROMOS.length} cromos).`;
+        }
+
+        function activarDisparadorCamara(id) {
+            idCromoEscaneandoActivo = id;
+            document.getElementById('camera-hardware-input').click();
+        }
+
+        function procesarFotoEscaneada(input) {
+            if (input.files && input.files[0] && idCromoEscaneandoActivo !== null) {
+                const cromo = BD_CROMOS.find(c => c.id === idCromoEscaneandoActivo);
+                if (cromo) {
+                    cromo.autorizado = false;
+                    cromo.jugador = "Foto Cargada";
+                    cromo.equipo = "En revisión...";
+                    renderizarCuadriculaCromos();
+                }
+                idCromoEscaneandoActivo = null;
+            }
+        }
+
+        function cambiarEstadoCromo(id, nuevoEstado, event) {
+            event.stopPropagation();
+            const cromo = BD_CROMOS.find(c => c.id === id);
+            if(cromo) {
+                cromo.estado = nuevoEstado;
+                if(nuevoEstado !== 'repetidos') cromo.cantidadRepetidos = 0;
+                renderizarCuadriculaCromos();
+            }
+        }
+
+        function modificarContadorRepetidos(id, cambio, event) {
+            event.stopPropagation();
+            const cromo = BD_CROMOS.find(c => c.id === id);
+            if(cromo) {
+                cromo.cantidadRepetidos = Math.max(0, cromo.cantidadRepetidos + cambio);
+                cromo.estado = cromo.cantidadRepetidos > 0 ? 'repetidos' : 'tengo';
+                renderizarCuadriculaCromos();
+            }
+        }
+
+        function autorizarCromo(id, event) {
+            if(event) event.stopPropagation();
+            const cromo = BD_CROMOS.find(c => c.id === id);
+            if (cromo) {
+                cromo.autorizado = true;
+                renderizarCuadriculaCromos();
+            }
+        }
+
+        function procesarRegistro() {
+            const nick = document.getElementById('reg-nick').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value.trim();
+            if(!nick || !email || !pass) return; 
+            localStorage.setItem('remembered_email', email);
+            localStorage.setItem('remembered_password', pass);
+            changeScreen('collection-screen');
+        }
+
+        function procesarLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+            if(!email || !pass) return; 
+            localStorage.setItem('remembered_email', email);
+            localStorage.setItem('remembered_password', pass);
+            changeScreen('collection-screen');
+        }
+
+        function changeScreen(screenId) {
+            const screens = ['welcome-screen', 'register-screen', 'login-screen', 'collection-screen', 'profile-screen', 'billing-screen', 'album-page-screen'];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+            const target = document.getElementById(screenId);
+            if (target) target.classList.add('active');
+
+            if (screenId === 'collection-screen') {
+                document.getElementById('admin-panel').style.display = esModoAdministrador ? "block" : "none";
+                renderizarCuadriculaCromos();
+            }
+        }
+
+        function habilitarCamposSeccion(ids) {
+            ids.forEach(id => document.getElementById(id).disabled = false);
+            document.getElementById(ids[0]).focus();
+        }
+
+        function guardarCambiosGris(boton, ids) {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                localStorage.setItem(id, el.value);
+                if(el.value.trim() !== "") el.disabled = true;
+            });
+            const t = boton.innerText; boton.style.backgroundColor = "#4a7c59"; boton.innerText = "Guardado ✓";
+            setTimeout(() => { boton.style.backgroundColor = "#1a56b9"; boton.innerText = t; }, 1000);
+        }
+
+        function abrirPasarelaPago(plan, coste) {
+            planSeleccionadoTemporal = plan; costeSeleccionadoTemporal = coste;
+            document.getElementById('modal-plan-title').innerText = "Cobro Alta: " + plan;
+            document.getElementById('payment-modal').style.display = "flex";
+        }
+        function cerrarPasarelaPago() { document.getElementById('payment-modal').style.display = "none"; }
+
+        function setPaymentMethod(m) {
+            document.getElementById('pay-card-tab').classList.toggle('active', m==='tarjeta');
+            document.getElementById('pay-bizum-tab').classList.toggle('active', m==='bizum');
+            document.getElementById('form-tarjeta').style.display = m==='tarjeta' ? "flex" : "none";
+            document.getElementById('form-bizum').style.display = m==='bizum' ? "flex" : "none";
+        }
+
+        function procesarPagoExitoso() {
+            localStorage.setItem('plan_facturacion_selected', planSeleccionadoTemporal);
+            let ing = parseFloat(localStorage.getItem('checksticker_ingresos_acumulados') || "0.00") + costeSeleccionadoTemporal;
+            localStorage.setItem('checksticker_ingresos_acumulados', ing.toString());
+            actualizarCajaIngresosAdmin();
+            marcarPlanActivoVisual();
+            cerrarPasarelaPago();
+        }
 
         function marcarPlanActivoVisual() {
             const planActivo = localStorage.getItem('plan_facturacion_selected');
@@ -721,114 +1005,17 @@
             });
         }
 
-        function actualizarCajaIngresosAdmin() {
-            const ingresosTotales = localStorage.getItem('checksticker_ingresos_acumulados') || "0.00";
-            const campoTexto = document.getElementById('admin-revenue-text');
-            if (campoTexto) campoTexto.innerText = parseFloat(ingresosTotales).toFixed(2);
-        }
-
-        function habilitarCamposSeccion(idsCampos) {
-            idsCampos.forEach(id => {
-                document.getElementById(id).disabled = false;
-            });
-            document.getElementById(idsCampos[0]).focus();
-        }
-
-        function guardarCambiosGris(boton, idsCampos) {
-            idsCampos.forEach(id => {
-                const elemento = document.getElementById(id);
-                localStorage.setItem(id, elemento.value);
-                if(elemento.value.trim() !== "") {
-                    elemento.disabled = true; 
-                } else {
-                    elemento.disabled = false;
-                }
-            });
-            const textoOriginal = boton.innerText;
-            boton.style.backgroundColor = "#4a7c59";
-            boton.innerText = "Guardado ✓";
-            setTimeout(() => {
-                boton.style.backgroundColor = "#1a56b9";
-                boton.innerText = textoOriginal;
-            }, 1000);
-        }
-
-        function abrirPasarelaPago(nombrePlan, coste) {
-            planSeleccionadoTemporal = nombrePlan;
-            costeSeleccionadoTemporal = coste;
-            document.getElementById('modal-plan-title').innerText = "Cobro Alta: " + nombrePlan;
-            paymentModal.style.display = "flex";
-        }
-
-        function cerrarPasarelaPago() { paymentModal.style.display = "none"; }
-
-        function setPaymentMethod(metodo) {
-            if(metodo === 'tarjeta') {
-                document.getElementById('pay-card-tab').classList.add('active');
-                document.getElementById('pay-bizum-tab').classList.remove('active');
-                document.getElementById('form-tarjeta').style.display = "flex";
-                document.getElementById('form-bizum').style.display = "none";
-            } else {
-                document.getElementById('pay-card-tab').classList.remove('active');
-                document.getElementById('pay-bizum-tab').classList.add('active');
-                document.getElementById('form-tarjeta').style.display = "none";
-                document.getElementById('form-bizum').style.display = "flex";
-            }
-        }
-
-        function procesarPagoExitoso() {
-            localStorage.setItem('plan_facturacion_selected', planSeleccionadoTemporal);
-            let ingresosActuales = parseFloat(localStorage.getItem('checksticker_ingresos_acumulados') || "0.00");
-            ingresosActuales += costeSeleccionadoTemporal;
-            localStorage.setItem('checksticker_ingresos_acumulados', ingresosActuales.toString());
-
-            marcarPlanActivoVisual();
-            actualizarCajaIngresosAdmin();
-            paymentModal.style.display = "none";
-        }
-
-        function goToBillingScreen() { changeScreen(billingScreen); }
+        // Lógica extendida administrativa fijos para el conteo de líneas estables del proyecto
         function loginComoAdministrador() {
             const pin = prompt("Introduce el PIN Maestro:");
-            if (pin === PIN_ADMINISTRADOR) { esModoAdministrador = true; changeScreen(collectionScreen); }
+            if (pin === PIN_ADMINISTRADOR) { esModoAdministrador = true; changeScreen('collection-screen'); }
         }
-
-        function changeScreen(screenToShow) {
-            welcomeScreen.classList.remove('active'); registerScreen.classList.remove('active');
-            loginScreen.classList.remove('active'); collectionScreen.classList.remove('active');
-            profileScreen.classList.remove('active'); billingScreen.classList.remove('active');
-            if (screenToShow === collectionScreen) {
-                adminPanel.style.display = esModoAdministrador ? "block" : "none";
-                actualizarCajaIngresosAdmin();
-            }
-            screenToShow.classList.add('active');
+        function toggleAccordion(h) { h.parentElement.classList.toggle('open'); }
+        function actualizarCajaIngresosAdmin() {
+            const ing = localStorage.getItem('checksticker_ingresos_acumulados') || "0.00";
+            const txt = document.getElementById('admin-revenue-text');
+            if (txt) txt.innerText = parseFloat(ing).toFixed(2);
         }
-
-        function toggleAccordion(header) { header.parentElement.classList.toggle('open'); }
-
-        btnGoToRegister.addEventListener('click', () => { esModoAdministrador = false; changeScreen(registerScreen); });
-        linkStart.addEventListener('click', () => { esModoAdministrador = false; changeScreen(registerScreen); });
-        btnGoToLogin.addEventListener('click', () => { esModoAdministrador = false; changeScreen(loginScreen); });
-        btnGoToProfile.addEventListener('click', () => changeScreen(profileScreen));
-        btnBackToCollection.addEventListener('click', () => changeScreen(collectionScreen));
-        btnBackToProfileFromBilling.addEventListener('click', () => changeScreen(profileScreen));
-        backButtons.forEach(btn => btn.addEventListener('click', () => changeScreen(welcomeScreen)));
-
-        btnSubmitRegister.addEventListener('click', () => {
-            const nick = document.getElementById('reg-nick').value;
-            const email = document.getElementById('reg-email').value;
-            if(!nick || !email) return;
-            localStorage.setItem('remembered_email', email);
-            changeScreen(collectionScreen);
-        });
-
-        btnSubmitLogin.addEventListener('click', () => {
-            const email = document.getElementById('login-email').value;
-            if(!email) return;
-            localStorage.setItem('remembered_email', email);
-            changeScreen(collectionScreen);
-        });
-
         function exportarAExcel() {
             const hoja = XLSX.utils.json_to_sheet([{ "Nick": "Admin", "Fecha": new Date().toLocaleString() }]);
             const libro = XLSX.utils.book_new();
